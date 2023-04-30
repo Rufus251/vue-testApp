@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="posts" v-if="urlCheck">
-            <div @click="redirectToPost(post.id)" class="post" v-for="post in posts" :key="post.id">
+            <div @click="redirectToPost(post._id)" class="post" v-for="post in posts" :key="post.id">
                 <div>
                     <h3>{{ post.title }}</h3>
                     <p> {{ post.body }} </p>
@@ -29,7 +29,7 @@ export default {
         redirectToPost(id){
             this.$router.push('/posts/' + id);
         }
-    }
+    } 
 }
 </script>
 
