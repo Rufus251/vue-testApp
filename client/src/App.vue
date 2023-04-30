@@ -20,10 +20,10 @@ export default {
     }
   },
   mounted(){
-    this.fetchUsers()
+    this.fetchPosts()
   },
   methods: {
-    async fetchUsers(){
+    async fetchPosts(){
       try{
         const response = await axios.get('http://localhost:3001/posts')
         this.posts = response.data
@@ -32,6 +32,7 @@ export default {
         alert('Ошибка');
       }
     }
+    
   }
 }
 </script>
