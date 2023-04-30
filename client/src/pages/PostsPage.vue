@@ -29,7 +29,7 @@ export default {
         redirectToPost(id){
             this.$router.push('/posts/' + id);
         }
-    }
+    } 
 }
 </script>
 
