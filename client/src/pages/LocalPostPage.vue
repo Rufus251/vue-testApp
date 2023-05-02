@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default{
     props: {
         posts: {
@@ -26,16 +28,18 @@ export default{
         }
     },
     mounted() {
-        this.choosePost()
+        this.getPost();
     },
     methods: {
-        choosePost() {
-            const id = this.$route.path.slice(7, )
-            this.post = this.posts.find( post => {
-                console.log(post.id)
-                return post.id == id;
-            })
-            console.log(this.post)
+        async getPost(){
+            try {
+                const response = await axios.get('http://localhost:3001/posts/' + this.$route.params.id)
+                this.post.title = response.data.title
+                this.post.body = response.data.body
+            }
+            catch (e){
+                console.log(e)
+            }
         }
     }
 }
@@ -51,9 +55,5 @@ export default{
 
     border: 1px solid #444444;
     border-radius: 15px;
-
-    &:hover{
-        opacity: 0.7;
-    }
 }
 </style>

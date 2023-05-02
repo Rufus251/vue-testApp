@@ -3,7 +3,7 @@ import MainPage from '@/pages/MainPage.vue';
 import PostsPage from '@/pages/PostsPage.vue';
 import AboutUsPage from '@/pages/AboutUs.vue';
 import ContactUsPage from '@/pages/ContactUs.vue';
-import LocalPostsPage from '@/pages/LocalPostsPage.vue';
+import LocalPostsPage from '@/pages/LocalPostPage.vue';
  
 export default createRouter({
     history: createWebHashHistory(),
