@@ -1,18 +1,24 @@
 <template>
     <div>
-        <div class="posts" v-if="urlCheck">
-            <div @click="redirectToPost(post._id)" class="post" v-for="post in posts" :key="post.id">
-                <div>
-                    <h3>{{ post.title }}</h3>
-                    <p> {{ post.body }} </p>
-                </div>
-            </div>
-        </div>
+        <create-post 
+        @createPost="createPost"
+        />
+        <post-list 
+        :posts="posts"
+        @removePost="removePost" 
+        />
     </div>    
 </template>
 
 <script>
+import PostList from "@/components/PostList.vue"
+import CreatePost from "@/components/CreatePost.vue"
+
 export default {
+    components: {
+        PostList,
+        CreatePost
+    },
     props: {
         posts: {
             type: Array,
@@ -28,35 +34,18 @@ export default {
     methods: {
         redirectToPost(id){
             this.$router.push('/posts/' + id);
+        },
+        createPost(post){
+            this.$emit('createPost', post)
+        },
+        removePost(post){
+            this.$emit('removePost', post)
         }
     } 
 }
 </script>
 
 <style scoped lang="scss">
-.posts{
-    margin: 30px auto;
 
-    width: 1000px;
 
-    display: flex;
-    flex-direction: column;
-    
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-
-    .post{
-        width: 100%;
-
-        padding: 10px;
-
-        border: 1px solid #444444;
-        border-radius: 15px;
-
-        &:hover{
-            opacity: 0.7;
-        }
-    }
-}
 </style>
