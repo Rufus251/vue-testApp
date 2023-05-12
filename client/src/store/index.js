@@ -31,6 +31,7 @@ export default createStore({
         }
     },
     actions:{
+        // Мутации постов
         async fetchPosts({commit}){
             try{
                 const response = await axios.get('http://localhost:3001/posts')
@@ -43,7 +44,6 @@ export default createStore({
         },
 
         async createPost(store){
-            console.log("123", store.state.post.title, store.state.post.body)
             try {
                 await axios.post('http://localhost:3001/posts', {
                     title: store.state.post.title,
@@ -75,9 +75,39 @@ export default createStore({
             console.log("Post deleted")
         },
 
+        // Модальное окно и регистрация
         modalVisible(store, bool){
             store.commit('setShowModal', bool)
         },
+        async login(state, user){
+            if (user.username.length === 0 || user.password.length < 4 || user.password.length > 20){
+                state.commit('setAuthMessage', 'Некоректный логин или пароль')
+                return false
+            }
 
+            try{
+                const res = await axios.post('http://localhost:3001/auth/login', {
+                    username: user.username,
+                    password: user.password
+                })
+                console.log(res)
+            } catch(e){
+                state.commit('setAuthMessage', 'Некоректный логин или пароль')
+                console.log(e)
+            }
+            
+        },
+        async register(state, user){
+            if (user.username.length === 0 || user.password.length < 4 || user.password.length > 20){
+                state.commit('setAuthMessage', 'Некоректный логин или пароль')
+                return false
+            }
+            
+            // try{
+
+            // } catch(e){
+            //     console.log(e)
+            // }
+        }
     }
 })

@@ -8,14 +8,16 @@ router.post(
   "/registration",
   [
     check("username", "Имя пользователя не может быть пустым").notEmpty(),
-    check("password", "Пароь должен быть от 6 до 20 символов").isLength({
-      min: 6,
+    check("password", "Пароь должен быть от 4 до 20 символов").isLength({
+      min: 4,
       max: 20,
     }),
   ],
   authController.registration
 );
 router.post("/login", authController.login);
-router.get("/getUsers", authController.getUsers);
+router.put('/logout/:id', authController.logout)
+router.get('/check_access_token', authController.checkAccessToken);
+router.get('/check_refresh_token', authController.checkRefreshToken);
 
 export default router;

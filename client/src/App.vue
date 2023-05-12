@@ -12,10 +12,14 @@
       <div class="app__signModal__form__inputs">
 
         <p>Введите логин:</p>
-        <input type="text" />
+        <input
+        v-model.trim="user.username" 
+        type="text" />
   
         <p>Введите пароль:</p>
-        <input type="password" />
+        <input
+        v-model.trim="user.password" 
+        type="password" />
 
       </div>
       
@@ -27,8 +31,8 @@
       
       <div class="app__signModal__form__btns">
 
-        <button>Войти</button>
-        <button>Зарегистрироваться</button>
+        <button @click="login(user)">Войти</button>
+        <button @click="register(user)">Зарегистрироваться</button>
 
       </div>
 
@@ -49,6 +53,14 @@ export default {
     MyNavbar,
     authModal
   },
+  data(){
+    return{
+      user: {
+        username: '',
+        password: ''
+      }
+    }
+  },
   mounted(){
     this.fetchPosts()
   },
@@ -60,7 +72,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      fetchPosts: 'fetchPosts'
+      fetchPosts: 'fetchPosts',
+      login: 'login',
+      register: 'register'
     })
   }
 }

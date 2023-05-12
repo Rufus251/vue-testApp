@@ -1,7 +1,7 @@
 import User from "../models/authUser.js";
 import Role from "../models/authRole.js";
 import bcrypt from "bcryptjs";
-import tokenService from "../service/tokenService.js"
+import tokenService from "../service/tokenService.js";
 import { validationResult } from "express-validator";
 
 class authController {
@@ -29,10 +29,16 @@ class authController {
       const user = new User({
         username,
         password: hashPassword,
+        refresh_token: tokenService.generateRefreshToken({ username }),
         roles: [userRole.value],
       });
       await user.save();
-      return res.json({ message: "Юзер создан!" });
+
+      const accessToken = tokenService.generateAccessToken({ username });
+      return res.json({ 
+        message: "Юзер создан!", 
+        user, 
+        accessToken });
     } catch (e) {
       console.log(e);
       res.status(400).json({ message: "Registration error" });
@@ -42,34 +48,47 @@ class authController {
     try {
       // Проверка на наличие пользователя
       const { username, password } = req.body;
-      const user = await User.findOne({ username });
-      if (!user) {
+      const checking_user = await User.findOne({ username });
+      if (!checking_user) {
         return res.status(400).json({ message: "Юзер не найден" });
       }
 
       // Проверка пароля
-      const validPass = bcrypt.compareSync(password, user.password);
+      const validPass = bcrypt.compareSync(password, checking_user.password);
       if (!validPass) {
         return res.status(400).json({ message: "Пароль не верный" });
       }
 
-      // 
-      const token = tokenService.generateToken({username});
+      // Добавление токенов авторизации
+      const refreshToken = tokenService.generateRefreshToken({ username });
+      const accessToken = tokenService.generateAccessToken({ username });
       
-      return res.json(token)
+      // Обновление рефреш токена в бд
+      checking_user.refresh_token = refreshToken;
+
+      await checking_user.save();
+
+      // Ответ сервера
+      return res.status(200).json({
+        status: 200,
+        message: "Вы залогинились", 
+        user: checking_user,
+        accessToken
+      })
 
     } catch (e) {
       console.log(e);
       res.status(400).json({ message: "Login error" });
     }
   }
-  async getUsers(req, res) {
-    try {
-      const users = await User.find()
-      return res.json(users)
-    } catch (e) {
-      console.log(e);
-    }
+  async logout(){
+
+  }
+  async checkAccessToken(){
+
+  }
+  async checkRefreshToken(){
+
   }
 }
 
