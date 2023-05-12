@@ -13,7 +13,7 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "dev": "open-cli http://localhost:3001 && nodemon app.js"
+    "dev": "open-cli http://localhost:3001/posts && nodemon app.js"
   },
   "author": "",
   "license": "ISC",

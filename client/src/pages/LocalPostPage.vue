@@ -10,36 +10,37 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { mapState } from 'vuex';
 
 export default{
-    props: {
-        posts: {
-            type: Array,
-            required: true
-        }
-    },
-    data() {
-        return{
-            post: {
-                title: '',
-                body: ''        
-            }
-        }
-    },
     mounted() {
         this.getPost();
     },
+    data(){
+        return {
+            post: {
+                title: '',
+                body: ''
+            }
+        }
+    },
+    computed: {
+        ...mapState({
+            posts: state => state.posts
+        })
+    },
     methods: {
-        async getPost(){
-            try {
-                const response = await axios.get('http://localhost:3001/posts/' + this.$route.params.id)
-                this.post.title = response.data.title
-                this.post.body = response.data.body
-            }
-            catch (e){
-                console.log(e)
-            }
+        getPost(){
+            const id = this.$route.params.id
+
+            const Post = this.posts.find( post => {
+                if (post._id === id){
+                    return post
+                }
+            })
+            console.log(Post)
+            this.post.title = Post.title
+            this.post.body = Post.body
         }
     }
 }
