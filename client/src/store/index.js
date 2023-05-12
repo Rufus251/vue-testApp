@@ -10,6 +10,7 @@ export default createStore({
             body: ''
         },
         showModal: false,
+        authMessage: 'test'
     },
     getters:{
         
@@ -24,6 +25,9 @@ export default createStore({
         },
         setShowModal(state, bool){
             state.showModal = bool
+        },
+        setAuthMessage(state, message){
+            state.authMessage = message
         }
     },
     actions:{
@@ -73,6 +77,7 @@ export default createStore({
 
         modalVisible(store, bool){
             store.commit('setShowModal', bool)
-        }
+        },
+
     }
 })

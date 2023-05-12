@@ -18,7 +18,13 @@
         <input type="password" />
 
       </div>
-
+      
+      <div class="app__signModal__form__authMessage">
+        <p>
+          {{ authMessage }}
+        </p>
+      </div>
+      
       <div class="app__signModal__form__btns">
 
         <button>Войти</button>
@@ -48,7 +54,8 @@ export default {
   },
   computed: {
     ...mapState({
-      showModal: state => state.showModal
+      showModal: state => state.showModal,
+      authMessage: state => state.authMessage
     })
   },
   methods: {
@@ -87,6 +94,17 @@ body{
   
       outline: none;
     }
+  }
+
+  &__authMessage{
+    color: #fd2b2b;
+
+    margin-bottom: 15px;
+
+    max-width: 200px;
+
+    text-align: center;
+    word-wrap: break-word;
   }
 
   &__btns{
