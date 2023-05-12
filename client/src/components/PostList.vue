@@ -1,39 +1,32 @@
 <template>
     <div>
-        <div class="posts" v-if="urlCheck">
-            <div @click="redirectToPost(post._id)" class="post" v-for="post in posts" :key="post._id">
+        <div class="posts">
+            <div @click="$router.push('/posts/' + post._id)" class="post" v-for="post in posts" :key="post._id">
                 <div>
                     <h3>{{ post.title }}</h3>
                     <p> {{ post.body }} </p>
                 </div>
                 <button 
-                @click="removePost(post)" prevent> delete post</button>
+                @click.stop="deletePost(post._id)"> delete post</button>
             </div>
         </div>
     </div>    
 </template>
 
 <script>
+import { mapState, mapActions} from 'vuex';
+
 export default {
-    props: {
-        posts: {
-            type: Array,
-            required: true
-        }
-    },
     computed: {
-        urlCheck(){
-            const path = this.$route.path == '/posts';
-            return path;
-        }
+        ...mapState({
+            posts: state => state.posts,
+            showModal: state => state.showModal,
+        })
     },
     methods: {
-        redirectToPost(id){
-            this.$router.push('/posts/' + id);
-        },
-        removePost(post){
-            this.$emit('removePost', post)
-        }
+        ...mapActions({
+            deletePost: 'deletePost'
+        })
     } 
 }
 </script>

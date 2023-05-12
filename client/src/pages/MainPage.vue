@@ -5,14 +5,6 @@
 </template>
 
 <script>
-// import MyNavbar from '@/components/MyNavbar.vue'
-
-// export default {
-//   name: 'MainPage',
-//   components: {
-//     MyNavbar,
-//   }
-// }
 </script>
 
 <style>

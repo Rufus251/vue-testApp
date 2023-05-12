@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import router from "./router.js";
+import postsRouter from "./router/postRouter.js";
 
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/", router);
+app.use("/posts", postsRouter);
 
 async function startApp() {
   try {

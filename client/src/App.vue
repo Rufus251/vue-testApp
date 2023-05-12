@@ -1,79 +1,60 @@
 <template>
+
   <my-navbar></my-navbar> 
+
   <section>
-    <router-view 
-    :posts="posts" 
-    @createPost="createPost"
-    @removePost="removePost"
-    />
+    <router-view />
   </section>
+
+  <auth-modal class="app__signModal" v-model:show="showModal">
+    <form @submit.prevent class="app__signModal__form">
+
+      <div class="app__signModal__form__inputs">
+
+        <p>Введите логин:</p>
+        <input type="text" />
+  
+        <p>Введите пароль:</p>
+        <input type="password" />
+
+      </div>
+
+      <div class="app__signModal__form__btns">
+
+        <button>Войти</button>
+        <button>Зарегистрироваться</button>
+
+      </div>
+
+    </form>
+  </auth-modal>
+
 </template>
 
 <script>
 import MyNavbar from '@/components/MyNavbar.vue'
-import axios from 'axios';
+import authModal from '@/components/UI/authModal.vue'
+
+import { mapActions, mapState} from 'vuex';
 
 export default {
   name: 'MainPage',
   components: {
     MyNavbar,
-  },
-  data(){
-    return {
-      posts: []
-    }
+    authModal
   },
   mounted(){
     this.fetchPosts()
   },
+  computed: {
+    ...mapState({
+      showModal: state => state.showModal
+    })
+  },
   methods: {
-    async fetchPosts(){
-      try{
-        const response = await axios.get('http://localhost:3001/posts')
-        this.posts = response.data
-      }
-      catch (e){
-        alert('Ошибка получения постов');
-      }
-      console.log("Post getted")
-    },
-    async createPost(post){
-      
-      // Добавление поста
-      try {
-        await axios.post('http://localhost:3001/posts', {
-          title: post.title,
-          body: post.body
-        })
-      }
-      catch (e){
-        console.log(e)
-      }
-      console.log("Post added")
-
-      // Меняем посту айдишник на актуальный в бд
-      let currentPost;
-      try{
-        const response = await axios.get('http://localhost:3001/posts')
-        currentPost = response.data[response.data.length - 1]
-      }
-      catch (e){
-        alert('Ошибка после добавления');
-      }
-
-      this.posts.push(currentPost)
-
-    },
-    async removePost(post){
-      this.posts = this.posts.filter(p => p._id !== post._id)
-      try {
-        await axios.delete('http://localhost:3001/posts/' + post._id)
-      }
-      catch (e){
-        console.log(e)
-      }
-      console.log("Post deleted")
-    }
+    ...mapActions({
+      fetchPosts: 'fetchPosts'
+    })
   }
 }
 </script>
@@ -83,8 +64,47 @@ export default {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
+    font-family: Comic Sans MS;
 }
 body{
   background-color: #aaaaaa;
+}
+.app__signModal__form{
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  &__inputs{
+    width: 200px;
+
+    input{
+      width: 100%;
+
+      margin-bottom: 15px;
+  
+      padding: 5px;
+  
+      outline: none;
+    }
+  }
+
+  &__btns{
+    width: 200px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 10px;
+    button{
+      padding: 5px;
+  
+      width: 100%;
+    }
+  }
+
+
 }
 </style>

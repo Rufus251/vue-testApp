@@ -10,33 +10,25 @@
                 v-model="post.body"
                 placeholder="Post body"> </textarea>
 
-                <button @click="createPost"> Create </button>
+                <button @click="createPost(title, body)"> Create </button>
             </form>
         </div>
     </div>
 </template>
 
 <script>
+import { mapActions, mapState} from 'vuex';
 
 export default {
-    data(){
-        return {
-            post: {
-                _id: null,
-                title: "",
-                body: ""
-            }
-        }
+    computed: {
+        ...mapState({
+            post: state => state.post
+        })
     },
     methods: {
-        createPost(){
-            this.post._id = Date.now();
-            this.$emit('createPost', this.post);
-            this.post = {
-                title: "",
-                body: ""
-            }
-        }
+        ...mapActions({
+            createPost: 'createPost'
+        })
     }
 }
 </script>
