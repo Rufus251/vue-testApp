@@ -17,7 +17,7 @@ router.post(
 );
 router.post("/login", authController.login);
 router.put('/logout/:_id', authController.logout)
-router.get('/check_access_token', authController.checkAccessToken);
-router.get('/check_refresh_token', authController.checkRefreshToken);
+router.get('/checkAccessToken', authController.checkAccessToken);
+router.get('/checkRefreshToken', authController.checkRefreshToken);
 
 export default router;

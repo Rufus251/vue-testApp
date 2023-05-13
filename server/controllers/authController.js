@@ -36,6 +36,7 @@ class authController {
 
       const accessToken = tokenService.generateAccessToken({ username });
       return res.json({ 
+        status: 200,
         message: "Юзер создан!", 
         user, 
         accessToken });
@@ -84,7 +85,6 @@ class authController {
   async logout(req, res){
     try{
       const { _id } = req.params
-      console.log(_id)
       const checking_user = await User.findOne({ _id });
       if (!checking_user) {
         return res.status(400).json({ message: "Юзер не найден" });
@@ -99,10 +99,34 @@ class authController {
       console.log(e)
     }
   }
-  async checkAccessToken(){
+  async checkAccessToken(req, res){
+    if (!req.headers.authorization){
+      console.log('checkAccessToken Error')
+      return res.status(400)
+    }
+    const token = req.headers.authorization.split(' ')[1]
 
+    const result = tokenService.checkAccessToken(token)
+
+    if(result.status === 200){
+      const username = result.token.username
+      const user = await User.findOne({ username })
+      const accessToken = tokenService.generateAccessToken({ username })
+      
+      return res.status(200).json({
+        status: 200,
+        user,
+        accessToken
+      })
+    }
+    else{
+      console.log("Токен не валидный")
+      return res.status(404).json({
+        status: 404
+      })
+    }
   }
-  async checkRefreshToken(){
+  async checkRefreshToken(req, res){
 
   }
 }

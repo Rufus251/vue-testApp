@@ -39,11 +39,12 @@ export default createStore({
         setAuth(state, bool){
             state.isAuth = bool
         },
-        setUserAndAccessToken(state, payload){
+        setUser(state, payload){
             state.user.username = payload.username
             state.user._id = payload._id
+        },
+        setAccessToken(state, payload){
             state.user.refreshToken = payload.refreshToken
-
             state.accessToken = payload.accessToken
         }
     },
@@ -92,21 +93,29 @@ export default createStore({
             console.log("Post deleted")
         },
 
-        // Модальное окно и регистрация
+        // Модальное окно
         modalVisible(store, bool){
             store.commit('setShowModal', bool)
         },
-        async register(state, user){
-            if (user.username.length === 0 || user.password.length < 4 || user.password.length > 20){
+        async register(state, newUser){
+            if (newUser.username.length === 0 || newUser.password.length < 4 || newUser.password.length > 20){
                 state.commit('setAuthMessage', 'Некоректный логин или пароль')
                 return false
             }
             
-            // try{
+            try{
+                const res = await axios.post("http://localhost:3001/auth/registration", {
+                    username: newUser.username,
+                    password: newUser.password
+                })
+                if (res.body.status === 200){
+                    state.commit('setAuthMessage', 'Вы успешно зарегистрировали пользователя!')
+                }
 
-            // } catch(e){
-            //     console.log(e)
-            // }
+            } catch(e){
+                state.commit('setAuthMessage', 'Пользователь с таким логином уже существует')
+                console.log(e)
+            }
         },
         async login(state, user){
 
@@ -133,17 +142,19 @@ export default createStore({
                     const refreshToken = res.data.user.refresh_token
                     const resUser = res.data.user
 
-                    state.commit("setUserAndAccessToken", {
+                    localStorage.setItem('accessToken', accessToken)
+                    localStorage.setItem('refreshToken', refreshToken)
+
+                    state.commit("setUser", {
                         username: resUser.username,
-                        _id: resUser._id,
+                        _id: resUser._id
+                    })
+                    state.commit("setAccessToken", {
                         refreshToken: refreshToken,
                         accessToken: accessToken
                     })
                     state.dispatch("modalVisible", false)
                 }
-
-
-
 
             } catch(e){
                 state.commit('setAuthMessage', 'Некоректный логин или пароль')
@@ -158,17 +169,62 @@ export default createStore({
             } catch (e){
                 console.log(e)
             }
-            state.commit("setUserAndAccessToken", {
+            state.commit("setUser", {
                 username: null,
-                _id: null,
+                _id: null
+            })
+            state.commit("setAccessToken", {
                 refreshToken: null,
                 accessToken: null
             })
             state.commit("setAuth", false)
             state.dispatch("modalVisible", false)
 
-            
+            localStorage.setItem('accessToken', null)
+            localStorage.setItem('refreshToken', null)
+
+        },
+        async checkAccessToken(state){
+            const checkAccessToken = localStorage.getItem('accessToken')
+            try{
+                const result = await axios.get("http://localhost:3001/auth/checkAccessToken", {
+                    headers:{
+                        Authorization: "Bearier " + checkAccessToken
+                    }
+                })
+
+                const resUser = result.data.user
+                
+                const accessToken = result.data.accessToken
+                const refreshToken = result.data.user.refresh_token
+
+                console.log(accessToken)
+                console.log(refreshToken)
+
+                state.commit("setAuth", true)
+
+                localStorage.setItem('accessToken', accessToken)
+                localStorage.setItem('refreshToken', refreshToken)
+
+                state.commit("setUser", {
+                    username: resUser.username,
+                    _id: resUser._id
+                })
+                state.commit("setAccessToken", {
+                    refreshToken: refreshToken,
+                    accessToken: accessToken
+                })
+                state.dispatch("modalVisible", false)
+
+                return false
+            } catch(e){
+                console.log("Токен не валидный")
+                state.dispatch('checkRefreshToken')
+                console.log(e)
+            }
+        },
+        async checkRefreshToken(){
+            console.log('checkRefresh')
         }
-        
     }
 })

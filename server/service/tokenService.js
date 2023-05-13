@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 class tokenService {
   generateAccessToken({ username }) {
-    return jwt.sign({ username }, process.env.ACCESS_SK, { expiresIn: "3m" });
+    return jwt.sign({ username }, process.env.ACCESS_SK, { expiresIn: "5s" });
   }
   generateRefreshToken({ username }) {
     return jwt.sign({ username }, process.env.REFRESH_SK, { expiresIn: "30d" });
@@ -11,6 +11,7 @@ class tokenService {
     try {
       const token = jwt.verify(access_token, process.env.ACCESS_SK);
 
+      
       return{
         status: 200,
         message: "Токен валидный",
