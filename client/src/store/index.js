@@ -261,5 +261,6 @@ export default createStore({
                 console.log(e)
             }
         }
+        // а эм чо не работает пул реквест 
     }
 })
