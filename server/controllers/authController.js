@@ -81,8 +81,23 @@ class authController {
       res.status(400).json({ message: "Login error" });
     }
   }
-  async logout(){
+  async logout(req, res){
+    try{
+      const { _id } = req.params
+      console.log(_id)
+      const checking_user = await User.findOne({ _id });
+      if (!checking_user) {
+        return res.status(400).json({ message: "Юзер не найден" });
+      }
 
+      checking_user.refresh_token = null
+      
+      await checking_user.save();
+
+      res.status(200).json({ checking_user })
+    } catch(e){
+      console.log(e)
+    }
   }
   async checkAccessToken(){
 

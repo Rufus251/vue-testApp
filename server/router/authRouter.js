@@ -16,7 +16,7 @@ router.post(
   authController.registration
 );
 router.post("/login", authController.login);
-router.put('/logout/:id', authController.logout)
+router.put('/logout/:_id', authController.logout)
 router.get('/check_access_token', authController.checkAccessToken);
 router.get('/check_refresh_token', authController.checkRefreshToken);
 
