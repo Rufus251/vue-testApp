@@ -21,6 +21,7 @@ export default {
   
   mounted(){
     this.fetchPosts()
+    this.checkAccessToken()
   },
   computed: {
     ...mapState({
@@ -30,7 +31,7 @@ export default {
   methods: {
     ...mapActions({
       fetchPosts: 'fetchPosts',
-      
+      checkAccessToken: 'checkAccessToken'
     })
   }
 }
