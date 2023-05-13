@@ -223,8 +223,43 @@ export default createStore({
                 console.log(e)
             }
         },
-        async checkRefreshToken(){
-            console.log('checkRefresh')
+        async checkRefreshToken(state){
+            const checkRefreshToken = localStorage.getItem('refreshToken')
+            try{
+                const result = await axios.get("http://localhost:3001/auth/checkRefreshToken", {
+                    headers:{
+                        Authorization: "Bearier " + checkRefreshToken
+                    }
+                })
+
+                const resUser = result.data.user
+                
+                const accessToken = result.data.accessToken
+                const refreshToken = result.data.user.refresh_token
+
+                console.log(accessToken)
+                console.log(refreshToken)
+
+                state.commit("setAuth", true)
+
+                localStorage.setItem('accessToken', accessToken)
+                localStorage.setItem('refreshToken', refreshToken)
+
+                state.commit("setUser", {
+                    username: resUser.username,
+                    _id: resUser._id
+                })
+                state.commit("setAccessToken", {
+                    refreshToken: refreshToken,
+                    accessToken: accessToken
+                })
+                state.dispatch("modalVisible", false)
+
+                return false
+            } catch(e){
+                console.log("Токен не валидный")
+                console.log(e)
+            }
         }
     }
 })
