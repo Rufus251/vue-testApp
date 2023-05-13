@@ -221,7 +221,7 @@ export default createStore({
                 console.log("Токен не валидный")
                 state.dispatch('checkRefreshToken')
                 console.log(e)
-            }
+            } 
         },
         async checkRefreshToken(state){
             const checkRefreshToken = localStorage.getItem('refreshToken')
