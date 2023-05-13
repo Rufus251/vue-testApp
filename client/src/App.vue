@@ -6,54 +6,31 @@
     <router-view />
   </section>
 
-  <auth-modal class="app__signModal" v-model:show="showModal">
-    <form @submit.prevent class="app__signModal__form">
-
-      <div class="app__signModal__form__inputs">
-
-        <p>Введите логин:</p>
-        <input type="text" />
-  
-        <p>Введите пароль:</p>
-        <input type="password" />
-
-      </div>
-
-      <div class="app__signModal__form__btns">
-
-        <button>Войти</button>
-        <button>Зарегистрироваться</button>
-
-      </div>
-
-    </form>
-  </auth-modal>
-
 </template>
 
 <script>
 import MyNavbar from '@/components/MyNavbar.vue'
-import authModal from '@/components/UI/authModal.vue'
 
 import { mapActions, mapState} from 'vuex';
 
 export default {
   name: 'MainPage',
   components: {
-    MyNavbar,
-    authModal
+    MyNavbar
   },
+  
   mounted(){
     this.fetchPosts()
   },
   computed: {
     ...mapState({
-      showModal: state => state.showModal
+      
     })
   },
   methods: {
     ...mapActions({
-      fetchPosts: 'fetchPosts'
+      fetchPosts: 'fetchPosts',
+      
     })
   }
 }
@@ -87,6 +64,17 @@ body{
   
       outline: none;
     }
+  }
+
+  &__authMessage{
+    color: #fd2b2b;
+
+    margin-bottom: 15px;
+
+    max-width: 200px;
+
+    text-align: center;
+    word-wrap: break-word;
   }
 
   &__btns{

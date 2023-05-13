@@ -13,26 +13,86 @@
       <li>
         <router-link class="hrefs" to="/contact"> Contacts </router-link>
       </li>
-      <li class="signBtn">
+      <li class="signBtn"
+      v-if="!isAuth">
         <div class="content" @click="modalVisible(true)">
           <p>Sign In</p>
+        </div>
+      </li>
+      <li class="logOutBtn"
+      v-if="isAuth">
+        <div class="content" @click="logout()">
+          <p>LogOut</p>
         </div>
       </li>
     </ul>
     
   </div>
+  <auth-modal class="app__signModal" 
+  v-if="!isAuth"
+  v-model:show="showModal">
+    <form @submit.prevent class="app__signModal__form">
+
+      <div class="app__signModal__form__inputs">
+
+        <p>Введите логин:</p>
+        <input
+        v-model.trim="user.username" 
+        type="text" />
+  
+        <p>Введите пароль:</p>
+        <input
+        v-model.trim="user.password" 
+        type="password" />
+
+      </div>
+      
+      <div class="app__signModal__form__authMessage">
+        <p>
+          {{ authMessage }}
+        </p>
+      </div>
+      
+      <div class="app__signModal__form__btns">
+
+        <button @click="login(user)">Войти</button>
+        <button @click="register(user)">Зарегистрироваться</button>
+
+      </div>
+
+    </form>
+  </auth-modal>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
+import { mapActions, mapState } from 'vuex';
+import authModal from '@/components/UI/authModal.vue'
 export default {
   name: "MyNavbar",
+  components:{
+    authModal
+  },
+  data(){
+    return{
+      user: {
+        username: 'test1',
+        password: 'testBody'
+      }
+    }
+  },
   computed: {
+    ...mapState({
+      showModal: state => state.showModal,
+      authMessage: state => state.authMessage,
+      isAuth: state => state.isAuth
+    })
   },
   methods: {
     ...mapActions({
-      modalVisible: 'modalVisible'
+      modalVisible: 'modalVisible',
+      login: 'login',
+      logout: 'logout',
+      register: 'register'
     })
   },
 };
@@ -70,7 +130,7 @@ export default {
         }
       }
 
-      &.signBtn {
+      &.signBtn, &.logOutBtn {
 
         background-color: #0099ff;
 
@@ -97,6 +157,7 @@ export default {
           cursor: pointer;
         }
       }
+      
     }
   }
 
