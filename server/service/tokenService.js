@@ -10,7 +10,6 @@ class tokenService {
   checkAccessToken(access_token) {
     try {
       const token = jwt.verify(access_token, process.env.ACCESS_SK);
-
       
       return{
         status: 200,

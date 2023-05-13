@@ -127,7 +127,40 @@ class authController {
     }
   }
   async checkRefreshToken(req, res){
+    if (!req.headers.authorization){
+      console.log('checkRefreshToken Error')
+      return res.status(400)
+    }
+    const token = req.headers.authorization.split(' ')[1]
 
+    const result = tokenService.checkRefreshToken(token)
+
+
+
+    if(result.status === 200){
+      console.log(result.token.username)
+      const username = result.token.username
+      const user = await User.findOne({ username })
+
+      const accessToken = tokenService.generateAccessToken({ username })
+      const refreshToken = tokenService.generateRefreshToken({ username })
+      
+      user.refresh_token = refreshToken
+
+      await user.save()
+
+      return res.status(200).json({
+        status: 200,
+        user,
+        accessToken
+      })
+    }
+    else{
+      console.log("Токен не валидный")
+      return res.status(404).json({
+        status: 404
+      })
+    }
   }
 }
 
