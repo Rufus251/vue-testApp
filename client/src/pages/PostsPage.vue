@@ -1,45 +1,32 @@
 <template>
-    <div>
-        <create-post 
-        @createPost="createPost"
-        />
-        <post-list 
-        :posts="posts"
-        @removePost="removePost" 
-        />
-    </div>    
+    <div v-if="isAuth">
+        <create-post />
+        <post-list />
+    </div>
+    <div v-else>
+        <h1> Залогиньтесь, чтобы увидеть посты </h1>
+    </div> 
 </template>
 
 <script>
 import PostList from "@/components/PostList.vue"
 import CreatePost from "@/components/CreatePost.vue"
 
+import { mapState} from 'vuex';
+
 export default {
     components: {
         PostList,
         CreatePost
     },
-    props: {
-        posts: {
-            type: Array,
-            required: true
-        }
-    },
     computed: {
-        urlCheck(){
-            const path = this.$route.path == '/posts';
-            return path;
-        }
-    },
+        ...mapState({
+            isAuth: state => state.isAuth
+        })
+    },    
     methods: {
         redirectToPost(id){
             this.$router.push('/posts/' + id);
-        },
-        createPost(post){
-            this.$emit('createPost', post)
-        },
-        removePost(post){
-            this.$emit('removePost', post)
         }
     } 
 }

@@ -15,7 +15,7 @@ export default createStore({
             _id: null,
             refreshToken: localStorage.getItem("refreshToken") || null
         },
-        authMessage: 'test',
+        authMessage: '',
         isAuth: false,
         accessToken: localStorage.getItem("accessToken") || null
     },
